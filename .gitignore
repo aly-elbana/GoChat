@@ -1,0 +1,14 @@
+# build output
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+coverage.*
+
+# editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
