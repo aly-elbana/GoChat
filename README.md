@@ -189,7 +189,3 @@ Integration tests start a real server on a random port and drive real clients:
 - graceful server shutdown notifies every client
 
 Plus unit tests for the line editor (cursor keys, history, completion, redraw while typing) and the protocol rules. GitHub Actions runs everything on Linux, macOS and Windows.
-
-##  License
-
-MIT — see [LICENSE](LICENSE).
