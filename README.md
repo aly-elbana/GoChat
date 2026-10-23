@@ -14,8 +14,6 @@
 ![RPC](https://img.shields.io/badge/transport-net%2Frpc-blueviolet)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-<img src="docs/demo.gif" alt="GoChat demo: a server and three clients chatting" width="900">
-
 </div>
 
 ---
