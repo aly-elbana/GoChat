@@ -67,7 +67,7 @@ Clients on other machines: start the server, it prints its LAN address, then
 | ------- | ----------- | ----------------------- | ------------------------------------------------- |
 | server  | `-addr`     | `:9090`                 | listen address                                    |
 |         | `-name`     | `GoChat`                | server name shown on join                         |
-|         | `-motd`     | `Be kind. Have fun. 🐹` | message of the day                                |
+|         | `-motd`     | `Be kind. Have fun. ` | message of the day                                |
 |         | `-history`  | `20`                    | recent messages replayed to new users (`0` = off) |
 | client  | `-server`   | `localhost:9090`        | server address                                    |
 |         | `-name`     | _(prompt)_              | username                                          |
@@ -192,6 +192,6 @@ Integration tests start a real server on a random port and drive real clients:
 
 Plus unit tests for the line editor (cursor keys, history, completion, redraw while typing) and the protocol rules. GitHub Actions runs everything on Linux, macOS and Windows.
 
-## 📄 License
+##  License
 
 MIT — see [LICENSE](LICENSE).
