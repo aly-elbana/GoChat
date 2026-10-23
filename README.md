@@ -24,20 +24,20 @@ GoChat is a client–server chat where every client talks to a central server th
 
 It is written with the **standard library only**: no third-party modules, `go run` works on a fresh clone.
 
-## ✨ Features
+## Features
 
-| | |
-|---|---|
-| 🔌 **Server push over RPC** | The server delivers messages through an RPC callback service the client exposes (`Client.Deliver`). |
-| 👥 **Unique usernames** | Case-insensitive (`Alice` = `alice`), validated, reserved names blocked. A taken name just asks you to pick another. |
-| 📣 **Join / leave notifications** | Everyone else sees who joined, who left — and who *crashed*. |
-| 📨 **Broadcast excluding sender** | The server never echoes your own message back; your client shows it locally. |
-| ⚡ **Fully concurrent** | Per-client goroutines and queues; one slow or frozen client can never stall the others. |
-| 🛟 **Robust failure handling** | Duplicate names, `kill -9`, network drops, frozen clients, and graceful **Ctrl+C** on both sides. |
-| ⌨️ **A real terminal UI** | Incoming messages never clobber what you're typing. History (↑/↓), Tab completion, colours per user. |
-| 🎁 **Extras** | Private messages, `/me` actions, `@mentions` (highlight + bell), recent-history replay for newcomers, ANSI-injection protection. |
+|                                |                                                                                                                                  |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Server push over RPC**       | The server delivers messages through an RPC callback service the client exposes (`Client.Deliver`).                              |
+| **Unique usernames**           | Case-insensitive (`Alice` = `alice`), validated, reserved names blocked. A taken name just asks you to pick another.             |
+| **Join / leave notifications** | Everyone else sees who joined, who left — and who _crashed_.                                                                     |
+| **Broadcast excluding sender** | The server never echoes your own message back; your client shows it locally.                                                     |
+| **Fully concurrent**           | Per-client goroutines and queues; one slow or frozen client can never stall the others.                                          |
+| **Robust failure handling**    | Duplicate names, `kill -9`, network drops, frozen clients, and graceful **Ctrl+C** on both sides.                                |
+| ⌨ **A real terminal UI**       | Incoming messages never clobber what you're typing. History (↑/↓), Tab completion, colours per user.                             |
+| **Extras**                     | Private messages, `/me` actions, `@mentions` (highlight + bell), recent-history replay for newcomers, ANSI-injection protection. |
 
-## 🚀 Quick start
+## Quick start
 
 Requires **Go 1.22+**.
 
@@ -63,32 +63,32 @@ Clients on other machines: start the server, it prints its LAN address, then
 
 ### Flags
 
-| Program | Flag | Default | Meaning |
-|---|---|---|---|
-| server | `-addr` | `:9090` | listen address |
-| | `-name` | `GoChat` | server name shown on join |
-| | `-motd` | `Be kind. Have fun. 🐹` | message of the day |
-| | `-history` | `20` | recent messages replayed to new users (`0` = off) |
-| client | `-server` | `localhost:9090` | server address |
-| | `-name` | *(prompt)* | username |
-| | `-plain` | `false` | simple line mode (no interactive editor) |
-| both | `-no-color` | `false` | disable colours (also honours `NO_COLOR`) |
+| Program | Flag        | Default                 | Meaning                                           |
+| ------- | ----------- | ----------------------- | ------------------------------------------------- |
+| server  | `-addr`     | `:9090`                 | listen address                                    |
+|         | `-name`     | `GoChat`                | server name shown on join                         |
+|         | `-motd`     | `Be kind. Have fun. 🐹` | message of the day                                |
+|         | `-history`  | `20`                    | recent messages replayed to new users (`0` = off) |
+| client  | `-server`   | `localhost:9090`        | server address                                    |
+|         | `-name`     | _(prompt)_              | username                                          |
+|         | `-plain`    | `false`                 | simple line mode (no interactive editor)          |
+| both    | `-no-color` | `false`                 | disable colours (also honours `NO_COLOR`)         |
 
 ### Chat commands
 
-| Command | Does |
-|---|---|
-| *any text* | send to everyone (except you) |
-| `/users` · `/who` | list who's online and since when |
-| `/msg <user> <text>` · `/w` | private message |
-| `/me <action>` | action, e.g. `/me waves` → `* alice waves` |
-| `/clear` | clear the screen |
-| `/help` | show commands |
-| `/quit` · **Ctrl+C** · **Ctrl+D** | leave gracefully |
+| Command                           | Does                                       |
+| --------------------------------- | ------------------------------------------ |
+| _any text_                        | send to everyone (except you)              |
+| `/users` · `/who`                 | list who's online and since when           |
+| `/msg <user> <text>` · `/w`       | private message                            |
+| `/me <action>`                    | action, e.g. `/me waves` → `* alice waves` |
+| `/clear`                          | clear the screen                           |
+| `/help`                           | show commands                              |
+| `/quit` · **Ctrl+C** · **Ctrl+D** | leave gracefully                           |
 
 Tab completes commands and usernames · ↑/↓ browse history · `@name` mentions are highlighted and ring the bell.
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -110,8 +110,8 @@ flowchart LR
 
 Each client opens **two TCP connections** to the server's single port:
 
-1. **Control channel** — the client is the RPC *caller*: `Chat.Join`, `Chat.Send`, `Chat.Whisper`, `Chat.Users`, `Chat.Leave`.
-2. **Push channel** — roles reversed: the client *serves* RPC and the server *calls* `Client.Deliver(event)` and `Client.Ping()`.
+1. **Control channel** — the client is the RPC _caller_: `Chat.Join`, `Chat.Send`, `Chat.Whisper`, `Chat.Users`, `Chat.Leave`.
+2. **Push channel** — roles reversed: the client _serves_ RPC and the server _calls_ `Client.Deliver(event)` and `Client.Ping()`.
 
 ```mermaid
 sequenceDiagram
@@ -130,14 +130,14 @@ sequenceDiagram
     Note over A: not sent back to alice — her client echoes locally
 ```
 
-**Why a reverse channel instead of the server dialling the client?** Because the *client* opens both connections, push works through NAT, home routers and firewalls — the server never needs to reach into a client's network. It's still pure `net/rpc`: the client just calls `rpc.ServeConn` on the second connection, and the server wraps it with `rpc.NewClient`.
+**Why a reverse channel instead of the server dialling the client?** Because the _client_ opens both connections, push works through NAT, home routers and firewalls — the server never needs to reach into a client's network. It's still pure `net/rpc`: the client just calls `rpc.ServeConn` on the second connection, and the server wraps it with `rpc.NewClient`.
 
 ### Concurrency design
 
-- **One RPC server per control connection.** A fresh `Chat` service instance is bound to each connection, so the server always knows *which user* is calling — a client can't send as someone else — and when `ServeConn` returns the server knows that client is gone.
+- **One RPC server per control connection.** A fresh `Chat` service instance is bound to each connection, so the server always knows _which user_ is calling — a client can't send as someone else — and when `ServeConn` returns the server knows that client is gone.
 - **The hub** keeps users, recent history and a sequence counter behind a single `sync.Mutex`. Broadcasting happens under that lock, which gives **every client the same global message order**.
 - **Non-blocking fan-out.** Each user has a buffered **outbox** channel. Broadcasting is a `select`/`default` send, so it never blocks; a client whose outbox fills up is disconnected as "too slow" instead of slowing everyone down.
-- **One writer goroutine per user** drains its outbox and makes the blocking RPC callbacks *outside* the lock, one at a time (preserving per-user order), with a timeout on every call.
+- **One writer goroutine per user** drains its outbox and makes the blocking RPC callbacks _outside_ the lock, one at a time (preserving per-user order), with a timeout on every call.
 - **No gap, no duplicates on join.** History replay and the "you're live" marker are queued under the same lock as broadcasts.
 - The client turns callbacks into a channel (`Events()`), which the UI consumes; the terminal editor serialises all screen output behind its own mutex.
 
@@ -145,19 +145,19 @@ Everything is tested under the race detector (`go test -race ./...`).
 
 ### Failure handling
 
-| Situation | What happens |
-|---|---|
-| Duplicate username | `Join` fails with *"username is already taken"*; the connection stays open and the client asks for another name. |
-| Invalid username | 2–16 letters/digits/`_-.`, reserved names (`server`, `admin`, `you`…) rejected with a clear reason. |
-| Client presses **Ctrl+C** / `/quit` | Client calls `Chat.Leave`; others see `← bob left the chat`. Terminal mode is restored. |
-| Client is killed (`kill -9`), crashes, or loses network | Control connection closes → server removes the user; others see `✖ bob disconnected (lost connection)`. |
-| Client frozen (e.g. suspended) | Heartbeat `Client.Ping` / delivery times out → dropped as *timed out*. |
-| Client too slow to keep up | Outbox full → dropped so it can't stall the room. |
-| Server presses **Ctrl+C** | Stops accepting, pushes *"server is shutting down"* to everyone, flushes queues (5 s max), closes connections, prints stats. A second Ctrl+C forces exit. |
-| Server vanishes silently | Client watchdog notices the missing heartbeats and exits with *"Lost connection to the server."* |
-| Malicious text | Control characters / ANSI escapes / bidi overrides are stripped server-side, so nobody can repaint other people's terminals. |
+| Situation                                               | What happens                                                                                                                                              |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Duplicate username                                      | `Join` fails with _"username is already taken"_; the connection stays open and the client asks for another name.                                          |
+| Invalid username                                        | 2–16 letters/digits/`_-.`, reserved names (`server`, `admin`, `you`…) rejected with a clear reason.                                                       |
+| Client presses **Ctrl+C** / `/quit`                     | Client calls `Chat.Leave`; others see `← bob left the chat`. Terminal mode is restored.                                                                   |
+| Client is killed (`kill -9`), crashes, or loses network | Control connection closes → server removes the user; others see `✖ bob disconnected (lost connection)`.                                                   |
+| Client frozen (e.g. suspended)                          | Heartbeat `Client.Ping` / delivery times out → dropped as _timed out_.                                                                                    |
+| Client too slow to keep up                              | Outbox full → dropped so it can't stall the room.                                                                                                         |
+| Server presses **Ctrl+C**                               | Stops accepting, pushes _"server is shutting down"_ to everyone, flushes queues (5 s max), closes connections, prints stats. A second Ctrl+C forces exit. |
+| Server vanishes silently                                | Client watchdog notices the missing heartbeats and exits with _"Lost connection to the server."_                                                          |
+| Malicious text                                          | Control characters / ANSI escapes / bidi overrides are stripped server-side, so nobody can repaint other people's terminals.                              |
 
-## 🗂️ Project layout
+## Project layout
 
 ```
 cmd/
@@ -171,7 +171,7 @@ internal/
 scripts/demo.sh    4-pane tmux layout for recording
 ```
 
-## 🧪 Tests
+## Tests
 
 ```bash
 go test -race ./...
@@ -191,18 +191,6 @@ Integration tests start a real server on a random port and drive real clients:
 - graceful server shutdown notifies every client
 
 Plus unit tests for the line editor (cursor keys, history, completion, redraw while typing) and the protocol rules. GitHub Actions runs everything on Linux, macOS and Windows.
-
-## 🎬 Recording the demo
-
-`make demo` opens server + 3 clients in one window. A good 2-minute script:
-
-1. Show the server banner; **alice** and **bob** join — everyone sees the join notifications.
-2. Third client tries the name `alice` → *already taken* → joins as `carol`.
-3. Chat back and forth; point out the sender doesn't receive their own message from the server.
-4. `/users`, `/msg carol psst`, `/me waves`, `@bob` mention.
-5. Type half a message in one pane while others send — your draft stays intact.
-6. Ctrl+C in **bob** → *left the chat*. `kill -9` a client → *lost connection*.
-7. Ctrl+C on the **server** → clients get the shutdown notice and exit cleanly.
 
 ## 📄 License
 
